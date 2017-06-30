@@ -1,8 +1,10 @@
+![travis](https://travis-ci.org/Mehdi-H/ansible-superset.svg?branch=master)
+
 # Ansible-superset
 
 An Ansible role to install superset on an Ubuntu distribution.
 
-It was developed in TDD with idempotence checks using the Molecule framework, and with Travis-CI.
+It was developed in TDD with idempotency checks using the Molecule framework, and with Travis-CI.
 
 ## Dependencies for development
 
