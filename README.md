@@ -1,5 +1,5 @@
-![travis](https://travis-ci.org/Mehdi-H/ansible-superset.svg?branch=master)
-
+[![travis](https://travis-ci.org/Mehdi-H/ansible-superset.svg?branch=master)
+](https://travis-ci.org/Mehdi-H/ansible-superset)
 # Ansible-superset
 
 An Ansible role to install superset on an Ubuntu distribution.
