@@ -1,2 +1,15 @@
 ---
 # tasks file for superset
+
+- name: Installing dependencies for superset
+  package:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - "build-essential"
+    - "libssl-dev"
+    - "libffi-dev"
+    - "python-dev"
+    - "python-pip"
+    - "libsasl2-dev"
+    - "libldap2-dev"
