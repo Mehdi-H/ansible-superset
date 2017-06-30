@@ -20,3 +20,11 @@
   with_items:
     - "virtualenv"
     - "setuptools"
+
+- name: Upgrading pip dependencies for superset
+  pip:
+    name: "{{item}}"
+    extra_args: --upgrade
+  with_items:
+    - "pip"
+    - "setuptools"

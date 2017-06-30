@@ -30,4 +30,6 @@ It was developed in TDD with idempotency checks using the Molecule framework, an
 
 The role was built according to the superset installation guildelines [from the Apache repository](https://github.com/ApacheInfra/superset/blob/master/docs/installation.rst).
 
-- Dependencies for Superset are installed
+- System dependencies for Superset are installed
+- Pip package dependencies for Superset are installed
+    - Some of them are updated through pip.

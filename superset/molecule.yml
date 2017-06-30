@@ -12,3 +12,12 @@ docker:
         - group1
 verifier:
   name: testinfra
+#molecule:
+#  test:
+#    sequence:
+#      - destroy
+#      - syntax
+#      - create
+#      - converge
+#      - idempotence
+#      - verify
