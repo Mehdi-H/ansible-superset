@@ -1,2 +1,4 @@
 ---
 # defaults file for superset
+
+superset_env: "/superset_env"

@@ -3,6 +3,8 @@ import testinfra.utils.ansible_runner
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     '.molecule/ansible_inventory').get_hosts('all')
 
+virtual_env = "/superset_env/bin/pip"
+
 
 def test_package_dependencies(Package):
 
@@ -18,12 +20,25 @@ def test_package_dependencies(Package):
         assert Package(dependency).is_installed
 
 
-def test_pip_package_dependencies(PipPackage):
+def test_pip_package_dependencies_on_the_system(PipPackage):
 
     # Given a list of pip package dependencies
     dependencies = ["virtualenv", "setuptools"]
-    # and the list of pip packages
+    # and the list of pip packages of the system
     pip_packages_list = PipPackage.get_packages().keys()
+
+    # Then, for each of these dependencies,
+    for dependency in dependencies:
+        # They should be installed
+        assert dependency in pip_packages_list
+
+
+def test_pip_package_dependencies_in_the_virtual_env(PipPackage):
+
+    # Given a list of pip package dependencies
+    dependencies = ["pip", "setuptools", "superset"]
+    # and the list of pip packages of the system
+    pip_packages_list = PipPackage.get_packages(pip_path=virtual_env).keys()
 
     # Then, for each of these dependencies,
     for dependency in dependencies:
@@ -44,7 +59,8 @@ def test_pip_package_dependencies_are_up_to_date(PipPackage):
     dependencies = ["setuptools", "pip"]
     # and the list of pip packages
     # with their current & latest versions
-    outdated_pip_packages = PipPackage.get_outdated_packages()
+    outdated_pip_packages = PipPackage.\
+        get_outdated_packages(pip_path=virtual_env)
 
     # If the list is empty, there is no outdated packages
     if not outdated_pip_packages:
@@ -54,5 +70,9 @@ def test_pip_package_dependencies_are_up_to_date(PipPackage):
     # Then, for each of these dependencies,
     for dependency in dependencies:
         # The current dependency version should be equal to the latest
-        pip_dependency_v = outdated_pip_packages.get(dependency)
-        assert pip_dependency_v["current"] == pip_dependency_v["latest"]
+        pip_dependency_v = outdated_pip_packages.\
+            get(dependency, "not_outdated")
+        try:
+            assert pip_dependency_v["current"] == pip_dependency_v["latest"]
+        except TypeError:
+            assert pip_dependency_v == "not_outdated"

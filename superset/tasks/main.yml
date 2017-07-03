@@ -1,7 +1,7 @@
 ---
 # tasks file for superset
 
-- name: Installing dependencies for superset
+- name: Installing system dependencies for superset
   package:
     name: "{{item}}"
     state: present
@@ -13,17 +13,31 @@
     - "python-pip"
     - "libsasl2-dev"
     - "libldap2-dev"
+  tags:
+    - system_dependencies
 
-- name: Installing pip dependencies for superset
+- name: Installing pip dependencies on the system
   pip:
-    name: "{{item}}"
+    name: "{{ item }}"
   with_items:
     - "virtualenv"
     - "setuptools"
 
+- name: Create virtual env with pip dependencies for superset
+  pip:
+    name: "{{ item }}"
+    state: present
+    virtualenv: "{{superset_env}}"
+    virtualenv_command: virtualenv
+  with_items:
+    - "setuptools"
+    - "pip"
+    - "superset"
+
 - name: Upgrading pip dependencies for superset
   pip:
     name: "{{item}}"
+    virtualenv: "{{superset_env}}"
     extra_args: --upgrade
   with_items:
     - "pip"
