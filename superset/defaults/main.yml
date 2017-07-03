@@ -1,4 +1,28 @@
 ---
 # defaults file for superset
 
-superset_env: "/superset_env"
+virtual_env: "/superset_env"
+
+load_examples: false  # Boolean variable to load examples into superset if needed
+
+superset:
+  app: "superset"
+  bin: "{{virtual_env}}/local/bin/superset"
+  db: "superset"
+  email: "admin@fab.org"
+  env: "{{virtual_env}}"
+  firstname: "admin"
+  lastname: "istrator"
+  user: "superset"
+  username: "admin"
+  password: "hello_pwd"
+  port: "8088"
+  healthy:
+    url: "health"
+    expected_code: "200"
+
+mysql:
+  host: "localhost"
+  port: "3306"
+  user: "root"
+  password: "hello_pwd"
