@@ -33,3 +33,20 @@ The role was built according to the superset installation guildelines [from the 
 - System dependencies for Superset are installed
 - Pip package dependencies for Superset are installed
     - Some of them are updated through pip.
+- Superset and its database are initialized through the fabmanager.
+- The superset server can be launched.
+
+## TODO
+
+- Test idempotency of the fabmanager custom module.
+- Create a superset module.
+- Check idempotency for this superset module.
+- Check health of the superset server after it has been launched.
+
+### Missing tests with test-infra
+
+- Check that the superset database exists after using the fabmanager.
+- Check that it contains a superset user as defined.
+- Check its rights.
+- Check the table it contains according the superset load-examples command.
+- Check health of the superset server after it has been launched.
