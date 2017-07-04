@@ -41,32 +41,44 @@
     - "superset"
     - "cryptography"
 
-- name: Create an admin user through the flask app-builder manager
-  shell: ". ./{{superset.env}}/bin/activate && fabmanager create-admin    --app {{ superset.app }} --username {{ superset.username }} --firstname {{ superset.firstname }} --lastname {{superset.lastname}} --email {{superset.email}} --password {{superset.password}}"
-  register: create_admin_output
+#- name: Copy flask_sqlalchemy/__init.py conf with correct variables to avoid warnings
+#  template:
+#    src: flask_sqlalchemy__init__.py.j2
+#    dest: "{{superset.env}}/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py"
+#    mode: "a+rxw"
 
-- debug: var=create_admin_output
+#- include: superset_database.yml
+
+- name: Create an admin user through the flask app-builder manager
+#  shell: ". ./{{superset.env}}/bin/activate && fabmanager create-admin --app {{ superset.app }} --username {{ superset.username }} --firstname {{ superset.firstname }} --lastname {{superset.lastname}} --email {{superset.email}} --password {{superset.password}}"
+  fabmanager:
+    app: "{{ superset.app }}"
+    username: "{{ superset.username }}"
+    firstname: "{{ superset.firstname }}"
+    lastname: "{{superset.lastname}}"
+    email: "{{superset.email}}"
+    password: "{{superset.password}}"
+    superset_env: "{{superset.env}}"
 
 - name: Initialize the database
-  shell: ". ./{{superset.env}}/bin/activate && superset db upgrade"
+  shell: ". {{superset.env}}/bin/activate && superset db upgrade"
 
 - name: Load some data to play with
-  shell: ". ./{{superset.env}}/bin/activate && superset load_examples"
+  shell: ". {{superset.env}}/bin/activate && superset load_examples"
   when: load_examples
 
 - name: Create default roles & permissions
-  shell: ". ./{{superset.env}}/bin/activate && superset init"
+  shell: ". {{superset.env}}/bin/activate && superset init"
 
 - name: Run the app on a web server
-  shell: ". ./{{superset.env}}/bin/activate && nohup gunicorn -w 2 --timeout 60 -b  0.0.0.0:8088 --limit-request-line 0 --limit-request-field_size 0 superset:app & > /dev/null"
+  shell: ". {{superset.env}}/bin/activate && nohup gunicorn -w 2 --timeout 60 -b  0.0.0.0:8088 --limit-request-line 0 --limit-request-field_size 0 superset:app & > /dev/null"
   register: web_server
 
-- debug: var=web_server
+#- name: Test that the superset webserver is up & healthy
+#  uri:
+#    url: "http://{{ hostvars[inventory_hostname].ansible_eth0.ipv4.address }}:{{ superset.port }}/{{ superset.healthy.url }}"
+#    method: GET
+#    return_content: yes
+#  register: healthy_check
+#  until: healthy_check.status == 200
 
-- name: Test that the superset webserver is up & healthy
-  uri:
-    url: "http://{{ hostvars['superset'].ansible_eth0.ipv4.address }}:{{ superset.port }}/{{ superset.healthy.url }}"
-    method: GET
-    return_content: yes
-  register: healthy_check
-  until: healthy_check.status == 200

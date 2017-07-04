@@ -3,7 +3,9 @@
 
 virtual_env: "/superset_env"
 
-load_examples: false  # Boolean variable to load examples into superset if needed
+load_examples: False  # Boolean variable to load examples into superset if needed
+
+SQLALCHEMY_TRACK_MODIFICATIONS: False
 
 superset:
   app: "superset"
